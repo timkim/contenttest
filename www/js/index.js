@@ -34,17 +34,6 @@ var app = {
     // function, we must explicitly call 'app.receivedEvent(...);'
     onDeviceReady: function() {
         app.receivedEvent('deviceready');
-        var g = ContentSync.sync({ src: 'https://github.com/timkim/zipTest/archive/master.zip' });
-        g.on('complete', function (data) {
-            console.log('complete')
-            if (data.localPath) {
-                console.log(data.Id);
-                console.log('changing')
-                var newLocation = data.localPath + "/index.html";
-                alert(newLocation);
-                window.location.href = newLocation;
-            }
-        });
     },
     // Update DOM on a Received Event
     receivedEvent: function(id) {
@@ -56,6 +45,34 @@ var app = {
         receivedElement.setAttribute('style', 'display:block;');
 
         console.log('Received Event: ' + id);
+    },
+
+    syncThisShit: function() {
+        var url = "https://github.com/timkim/zipTest/archive/master.zip"; 
+        var sync = ContentSync.sync({ src: url, id: 'adsf', type: 'replace' });
+        
+        var setProgress = function(progress) {
+
+            if(progress.status) {
+                document.getElementById('status').innerHTML = (progress.status == "Downloading" ? "Downloading..." : "Extracting...");
+            } else {
+                document.getElementById('status').innerHTML = ""; 
+            }
+
+            var progressBar = document.getElementById('progressbar').children[0];
+            progressBar.style.width = progress.progress + '%';
+        };
+
+        sync.on('progress', function(progress) {
+            //console.log("Progress event", progress);
+            setProgress(progress);
+        });
+        sync.on('complete', function(data) {
+            setProgress({progress: 100})
+            console.log("Complete", data);
+            console.log(data.localPath + "/index.html");
+            document.location = data.localPath + "/index.html";
+        });
     }
 };
 

@@ -113,3 +113,16 @@ h1 {
     animation:fade 3000ms infinite;
     -webkit-animation:fade 3000ms infinite;
 }
+
+#progressbar {
+  background-color: black;
+  border-radius: 13px; /* (height of inner div) / 2 + padding */
+  padding: 3px;
+}
+
+#progressbar > div {
+    background-color:#4B946A;
+    width: 0%; /* Adjust with JavaScript */
+    height: 20px;
+    border-radius: 10px;
+}
